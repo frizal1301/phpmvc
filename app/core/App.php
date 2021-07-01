@@ -12,9 +12,10 @@ class App{
 
         
         // mengecek apakah controller dari url itu ada
-        if( file_exists('../app/controllers/' . $url[0] . '.php') ) {
-            $this->controller = $url[0];
-            unset($url[0]);
+        if($url != null) {
+            if( file_exists('../app/controllers/' . $url[0] . '.php') ) {
+                $this->controller = $url[0];
+            }
         }
 
         require_once '../app/controllers/'.$this->controller.".php";
@@ -24,9 +25,11 @@ class App{
         if(isset($url[1]) ) {
             if(method_exists($this->controller, $url[1]) ){
                 $this->method = $url[1];
-                unset($url[1]);
             }
         }
+        // menghapus array controller dan method. dilakukan agar hanya parameter yang ada di url
+        unset($url[0]);
+        unset($url[1]);
 
         //mengecek apakah ada parameter
         if(!empty($url)){
