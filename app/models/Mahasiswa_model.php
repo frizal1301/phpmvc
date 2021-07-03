@@ -15,25 +15,39 @@ class Mahasiswa_model{
     //         "prodi" => "Teknik Komputer"
     //     ]
     // ];
-    private $dbh, // database handler
-            $stmt; // query
+    private $table = 'mahasiswa';
+    private $db;
     
     public function __construct(){
-        // data source name
-        $dsn = "mysql:host=localhost;dbname=phpmvc";
-        
-
-        try{
-            $this->dbh = new PDO($dsn, 'root','');
-        } catch (PDOException $e) {
-            die($e->getMessage());
-        }
+        $this->db = new Database;
     }
 
     public function getAllMhs(){
-        $this->stmt = $this->dbh->prepare("SELECT * FROM mahasiswa");
-        $this->stmt->execute();
-        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->db->query("SELECT * FROM ". $this->table);
+        return $this->db->resultSet();
+    }
+
+    public function getMhsById($id){
+        $this->db->query('SELECT * FROM '.$this->table. ' WHERE id = ?');
+        $this->db->bind(1 ,$id);
+        return $this->db->single();
+    }
+
+    public function tambahDataMahasiswa($data){
+        $query = "INSERT INTO mahasiswa 
+                    VALUES
+                  ('',:nama, :nim, :email, :prodi)
+        ";
+
+        $this->db->query($query);
+        $this->db->bind('nama', $data['nama']);
+        $this->db->bind('nim', $data['nim']);
+        $this->db->bind('email', $data['email']);
+        $this->db->bind('prodi', $data['prodi']);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+
     }
 }
 

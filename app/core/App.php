@@ -9,7 +9,6 @@ class App{
     
     public function __construct(){
         $url = $this->parseUrl();
-
         
         // mengecek apakah controller dari url itu ada
         if($url != null) {
